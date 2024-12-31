@@ -1,4 +1,5 @@
 import 'package:ecommerce/model/CategoryModel.dart';
+import 'package:ecommerce/model/LoginResponseModel.dart';
 import 'package:ecommerce/services/ProductServices.dart';
 import 'package:ecommerce/view/LandingPage.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,6 @@ class Homepage extends StatefulWidget {
   State<Homepage> createState() => _HomepageState();
 }
 
-
 Future<void>logOut(BuildContext context)async{
   SharedPreferences prefs=await SharedPreferences.getInstance();
   await prefs.remove('access_token');
@@ -19,19 +19,13 @@ Future<void>logOut(BuildContext context)async{
 }
 
 class _HomepageState extends State<Homepage> {
-  List<CategoryModel> categories=[];
-  Future<void>fetchCategory()async{
-    try{
-      List<CategoryModel> productCategores= await ProductServices.fetchCategogy();
-      setState((){
-        categories=productCategores;
-        print(categories);
-      });
-    }catch(e){
-      print("if any Error:  $e");
-    }
-  }
+late Future<List<CategoryModel>> categories;
 
+  @override
+  void initState(){
+    super.initState();
+    categories=ProductServices.fetchCategory();
+  }
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
@@ -72,23 +66,31 @@ class _HomepageState extends State<Homepage> {
             decoration: BoxDecoration(gradient: LinearGradient(
                 colors: [Colors.deepOrange.shade100,Colors.white70,Colors.green.shade100],
                 begin: Alignment.topLeft,end: Alignment.bottomRight)),
-            child: Column(children: [
-              Padding(padding: EdgeInsets.all(10),
-              child: categories.isEmpty
-                ?Center(child: CircularProgressIndicator(),)
-              :ListView.builder(
-                  itemCount: categories.length,
+            child:FutureBuilder<List<CategoryModel>>(
+              future: categories,
+              builder: (context,snapshot){
+                if(snapshot.connectionState==ConnectionState.waiting){
+                  return CircularProgressIndicator();
+                }
+                if(snapshot.hasError){
+                  return Center(child: Text("error:${snapshot.error}"),);
+                }if(snapshot.hasData){
+                  List<CategoryModel> categoryData=snapshot.data!;
+                  return ListView.builder(
+                  itemCount: categoryData.length,
                   itemBuilder: (context,index){
-                    final category=categories[index];
-                    return Padding(padding: EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Column(crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Image.network(category.image,width: 80,height: 80,),
-                      Text(category.name)
-                    ],),);
-                  })
-              )
-            ],),
+                    CategoryModel catg=categoryData[index];
+                    return ListTile(
+                      leading: Image.network(catg.image),
+                      title: Text(catg.name),
+                    );
+                  });
+
+                }else{
+                  return Center(child: Text(("no data")),);
+                }
+              },
+            )
           ),
         ),
       );

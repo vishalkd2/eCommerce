@@ -1,7 +1,7 @@
 
 
 class CategoryModel{
-  String id;
+  int id;
   String name;
   String image;
 
