@@ -31,7 +31,7 @@ class LandingPage extends StatelessWidget {
         print("Login this user: $email");
       }catch(e){
         print("Login failed");
-        // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Login Failed")));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Login Failed")));
       }
     }
   }
@@ -122,7 +122,6 @@ class LandingPage extends StatelessWidget {
                     style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(Colors.blue)),
                   )),
-                  // Center(child: TextButton(onPressed: (){}, child: Text("Login",style: TextStyle(fontSize: 20),),style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.blue)),)),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.1),
                   Center(
                       child: GestureDetector(

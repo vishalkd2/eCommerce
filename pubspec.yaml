@@ -39,6 +39,7 @@ dependencies:
   provider: ^6.1.2
   image_picker: ^1.1.2
   shared_preferences: ^2.3.4
+  carousel_slider: ^5.0.0
 
 dev_dependencies:
   flutter_test:

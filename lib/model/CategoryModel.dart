@@ -13,4 +13,9 @@ class CategoryModel{
         name: json['name'],
         image: json['image']);
   }
+  @override
+  String toString() {
+    return 'CategoryModel(id: $id, name: $name, image: $image)';
+  }
 }
+

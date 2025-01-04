@@ -11,9 +11,7 @@ class UserService {
     try {
       final response = await http.post(
         Uri.parse(baseUrl),
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: {'Content-Type': 'application/json'},
         body: json.encode(user.toJson()),
       );
 
